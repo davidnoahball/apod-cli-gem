@@ -43,7 +43,7 @@ class Scraper
       name_i = dt.match(/:.+/).to_s
       name_i[0] = " "
 
-      hash[:date] = "#{dt.match(/[0-9]{4}/)}-#{month_str}-#{dt.match(/[0-9]{2}/)}"
+      hash[:date] = "#{dt.match(/[0-9]{4}/)}-#{month_str}-#{dt.match(/[^0-9][0-9]{2}[^0-9]/).to_s.gsub(/[: ]/, "")}"
       hash[:name] = name_i.strip
       hash[:link] = links_hash[hash[:name]]
       array << hash
