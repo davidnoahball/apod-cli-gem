@@ -19,7 +19,14 @@ class Scraper
         date_titles[idx] = "#{date_titles[idx]} #{date_titles[idx + 1]}"
         date_titles.delete_at(idx + 1)
       end
-      hash[:date] = "#{dt.match(/[0-9]{4}/)}-#{months.index(dt.match(/[a-zA-Z]{1,}/).to_s) + 1}-#{dt.match(/[0-9]{2}/)}"
+      month_str = ""
+      month_num = months.index(dt.match(/[a-zA-Z]{1,}/).to_s) + 1
+      if month_num.to_s.length == 1
+        month_str = "0#{month_num}"
+      else
+        month_str = month_num.to_s
+      end
+      hash[:date] = "#{dt.match(/[0-9]{4}/)}-#{month_str}-#{dt.match(/[0-9]{2}/)}"
       array << hash
     end
 
