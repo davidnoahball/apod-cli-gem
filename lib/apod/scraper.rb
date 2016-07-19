@@ -27,6 +27,8 @@ class Scraper
         month_str = month_num.to_s
       end
       hash[:date] = "#{dt.match(/[0-9]{4}/)}-#{month_str}-#{dt.match(/[0-9]{2}/)}"
+
+      hash[:name] = dt.match(/:.+/).to_s.gsub(/:/, "").strip
       array << hash
     end
 
