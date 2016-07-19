@@ -2,8 +2,20 @@ require "nokogiri"
 require "open-uri"
 
 class Scraper
+  def initialize
+    @@data = self.class.index_data
+  end
+
+  def data
+    @@data
+  end
+
   def self.get_page
     Nokogiri::HTML(open("http://apod.nasa.gov/apod/archivepix.html"))
+  end
+
+  def pic_data(url)
+
   end
 
   def self.index_data
@@ -24,8 +36,10 @@ class Scraper
       hash = {}
       #There's one bloody link with a \n typo in its name that requires me to write this code.
       if idx == date_titles.length - 1 || months.index(date_titles[idx + 1].match(/[a-zA-Z]{1,}/).to_s).nil?
-        toggle_2007 = true
-        next
+        if idx != date_titles.length - 1
+          toggle_2007 = true
+          next
+        end
       end
       if toggle_2007
         toggle_2007 = false
@@ -53,5 +67,3 @@ class Scraper
     array
   end
 end
-
-p Scraper.index_data
