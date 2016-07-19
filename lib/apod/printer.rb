@@ -11,21 +11,25 @@ class Printer
     max_line_length = 0
     words_arr.each_with_index do |word, idx|
       line += word + " "
-      if line.length >= 45 || idx == words_arr.length - 1
+      if line.length >= 120 || idx == words_arr.length - 1
         lines_arr << line.strip
         if line.strip.length > max_line_length then max_line_length = line.strip.length end
         line = ""
       end
     end
+    puts ""
+    puts pad(max_line_length, page_hash[:name], "-").colorize(:red)
+    puts pad(max_line_length, page_hash[:link], "-").colorize(:red)
     lines_arr.each do |line|
       puts pad(max_line_length, line)
     end
+    puts ""
   end
-  def pad(max, str)
-    pad = ""
+  def pad(max, str, char=" ")
+    pad = char
     padding_amount = ((max - str.length) / 2).ceil
     padding_amount.times do |n|
-      pad += " "
+      pad += char
     end
     centered = "#{pad}#{str}#{pad}"
   end
