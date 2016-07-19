@@ -6,19 +6,32 @@ class Scraper
     Nokogiri::HTML(open("http://apod.nasa.gov/apod/archivepix.html"))
   end
 
-  def self.dates_hash
+  def self.index_data
     array = []
     months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
     content = self.get_page.css("body b")
-    date_titles = content.text.split("\n").reject!{|item| item == "" || item == ""}
+    links = content.css("a")
+    date_titles = content.text.split("\n").reject!{|item| item == ""}
     date_titles.pop
 
+    links_hash = {}
+    links.each do |link|
+      links_hash[link.text.strip] = link.attribute("href").value
+    end
+
+    toggle_2007 = false
     date_titles.each_with_index do |dt, idx|
       hash = {}
+      #There's one bloody link with a \n typo in its name that requires me to write this code.
       if idx == date_titles.length - 1 || months.index(date_titles[idx + 1].match(/[a-zA-Z]{1,}/).to_s).nil?
-        date_titles[idx] = "#{date_titles[idx]} #{date_titles[idx + 1]}"
-        date_titles.delete_at(idx + 1)
+        toggle_2007 = true
+        next
       end
+      if toggle_2007
+        toggle_2007 = false
+        next
+      end
+
       month_str = ""
       month_num = months.index(dt.match(/[a-zA-Z]{1,}/).to_s) + 1
       if month_num.to_s.length == 1
@@ -26,14 +39,19 @@ class Scraper
       else
         month_str = month_num.to_s
       end
-      hash[:date] = "#{dt.match(/[0-9]{4}/)}-#{month_str}-#{dt.match(/[0-9]{2}/)}"
 
-      hash[:name] = dt.match(/:.+/).to_s.gsub(/:/, "").strip
+      name_i = dt.match(/:.+/).to_s
+      name_i[0] = " "
+
+      hash[:date] = "#{dt.match(/[0-9]{4}/)}-#{month_str}-#{dt.match(/[0-9]{2}/)}"
+      hash[:name] = name_i.strip
+      hash[:link] = links_hash[hash[:name]]
       array << hash
     end
 
+    array << {date: "2007-07-16", name: "The Lagoon Nebula in Gas, Dust, and Stars", link: "ap070716.html"} #This is the dumb typo'd link that I decided to hardcode.
     array
   end
 end
 
-p Scraper.dates_hash
+p Scraper.index_data
