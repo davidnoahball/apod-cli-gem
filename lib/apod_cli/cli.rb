@@ -22,9 +22,9 @@ class CLI
     search_type = valid_input(["1", "2", "3"]).to_i
     case search_type
     when 1
-      search(:date)
+      date_search
     when 2
-      search(:name)
+      name_search
     when 3
       sample
     end
@@ -34,7 +34,8 @@ class CLI
       @printer.print_page(@scraper.pic_data(hash[:link]))
     end
 =end
-    puts "Would you like to perform another lookup?\n[y/n]"
+    puts "Would you like to perform another lookup?"
+    puts "[y/n]".colorize(:red)
     if valid_input(["y", "n"]) == "y"
       puts ""
       start
@@ -47,13 +48,21 @@ class CLI
 
   end
 
-  def search(type)
-    search_array = []
-    results = @data.select{|hash| search_array.include?(hash[type])}
+  def name_search
+    puts "Please enter one or multiple " + "search terms".colorize(:red) + "."
+    searchterms = gets.chomp.strip.downcase.split(" ")
+    results = []
+    searchterms.each do |searchterm|
+      results << @data.select{|hash| hash[:name].downcase.include?(searchterm)}
+    end
+    unique = results.flatten.uniq
+    print_links(unique)
   end
 
   def print_links(arr)
-
+    arr.each_with_index do |hash, idx|
+      @printer.print_link(hash, "[#{idx + 1}] ")
+    end
   end
 
   def print_pages(arr)
