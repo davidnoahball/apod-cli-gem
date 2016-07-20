@@ -15,7 +15,7 @@ class Scraper
   end
 
   def pic_data(url)
-
+    content = Nokogiri::HTML(open(url)).css("body").text.match(/Explanation:[\s\S]+?(\n(\s*)){3}/).to_s.gsub(/\n/, " ").gsub(/\s{2,}/, " ").strip
   end
 
   def self.index_data
@@ -59,7 +59,7 @@ class Scraper
 
       hash[:date] = "#{dt.match(/[0-9]{4}/)}-#{month_str}-#{dt.match(/[^0-9][0-9]{2}[^0-9]/).to_s.gsub(/[: ]/, "")}"
       hash[:name] = name_i.strip
-      hash[:link] = links_hash[hash[:name]]
+      hash[:link] = "http://apod.nasa.gov/apod/" + links_hash[hash[:name]]
       array << hash
     end
 
