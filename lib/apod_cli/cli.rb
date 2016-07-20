@@ -18,7 +18,8 @@ class CLI
     puts "Which type of APOD lookup would you like to perform?"
     puts "[1]".colorize(:red) + " Search by date"
     puts "[2]".colorize(:red) + " Search by name"
-    puts "[3]".colorize(:red) + " Sample data"
+    puts "[3]".colorize(:red) + " Search by date and name"
+    puts "[4]".colorize(:red) + " Sample data"
     search_type = valid_input(["1", "2", "3"]).to_i
     case search_type
     when 1
@@ -26,14 +27,10 @@ class CLI
     when 2
       name_search
     when 3
+      date_search(true)
+    when 4
       sample
     end
-=begin
-    @data.each_with_index do |hash, idx|
-      @printer.print_link(@data[1000], "[#{idx + 1}] ")
-      @printer.print_page(@scraper.pic_data(hash[:link]))
-    end
-=end
     puts "Would you like to perform another lookup?"
     puts "[y/n]".colorize(:red)
     if valid_input(["y", "n"]) == "y"
@@ -48,15 +45,23 @@ class CLI
 
   end
 
-  def name_search
+  def date_search(multisearch=false)
+    results = []
+    if multisearch then results = name_search(results) end
+    print_links(results)
+    more_info(results)
+  end
+
+  def name_search(searchspace=@data)
     puts "Please enter one or multiple " + "search terms".colorize(:red) + ", with each query comma separated."
     searchterms = gets.chomp.strip.downcase.split(",")
     results = []
     searchterms.each do |searchterm|
       searchterm.strip!
-      results << @data.select{|hash| hash[:name].downcase.include?(searchterm)}
+      results << searchspace.select{|hash| hash[:name].downcase.include?(searchterm)}
     end
     unique = results.flatten.uniq.sort{|h1, h2| h1[:date] > h2[:date] ? 1 : -1}
+    if searchspace != @data then return unique end
     print_links(unique)
     more_info(unique)
   end
