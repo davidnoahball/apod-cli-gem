@@ -1,6 +1,6 @@
 # Apod CLI
 
-This Ruby Gem provides a CLI to view and search information from the http://apod.nasa.gov/ website.
+This Ruby Gem uses web scraping to pull Astronomy Picture of the Day information from http://apod.nasa.gov and provides a basic CLI interface for that data.
 
 ## Installation
 
