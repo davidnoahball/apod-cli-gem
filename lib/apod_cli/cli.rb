@@ -49,14 +49,35 @@ class CLI
   end
 
   def name_search
-    puts "Please enter one or multiple " + "search terms".colorize(:red) + "."
-    searchterms = gets.chomp.strip.downcase.split(" ")
+    puts "Please enter one or multiple " + "search terms".colorize(:red) + ", with each query comma separated."
+    searchterms = gets.chomp.strip.downcase.split(",")
     results = []
     searchterms.each do |searchterm|
+      searchterm.strip!
       results << @data.select{|hash| hash[:name].downcase.include?(searchterm)}
     end
-    unique = results.flatten.uniq
+    unique = results.flatten.uniq.sort{|h1, h2| h1[:date] > h2[:date] ? 1 : -1}
     print_links(unique)
+    more_info(unique)
+  end
+
+  def more_info(arr)
+    puts "Would you like more information on one or more of these matches?"
+    puts "[y/n]".colorize(:red)
+    if valid_input(["y", "n"]) == "y"
+      puts "Please enter the " + "results number".colorize(:red) + " of any link(s) you would like more\ninformation on, comma separated. Or, type " + "'all'".colorize(:red) + " for more information on all results."
+      wanted = [(1..arr.length).to_a.map{|e| e.to_s}, "all"].flatten
+      searchterms = valid_input(wanted).split(",")
+      if searchterms == ["all"]
+        print_pages(arr)
+      else
+        selected = []
+        searchterms.each do |searchterm|
+          selected << arr[searchterm.to_i - 1]
+        end
+        print_pages(selected)
+      end
+    end
   end
 
   def print_links(arr)
@@ -66,7 +87,9 @@ class CLI
   end
 
   def print_pages(arr)
-
+    arr.each do |hash|
+      @printer.print_page(@scraper.pic_data(hash[:link]))
+    end
   end
 
   def valid_input(wanted)

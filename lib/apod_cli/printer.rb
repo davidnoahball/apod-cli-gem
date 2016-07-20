@@ -27,11 +27,13 @@ class Printer
         line = ""
       end
     end
+    puts ""
     puts pad(max_line_length, page_hash[:name], "-").colorize(:green)
     puts pad(max_line_length, page_hash[:link], "-").colorize(:green)
     lines_arr.each do |line|
       puts pad(max_line_length, line)
     end
+    puts ""
   end
   def pad(max, str, char=" ")
     pad = char
