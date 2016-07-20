@@ -7,7 +7,12 @@ require_relative "scraper"
 
 class Printer
   def print_link(link_hash, start="")
-    puts start + "The astronomy picture of the day on " + link_hash[:date].colorize(:green) + " was " + link_hash[:name].colorize(:green) + "."
+    lines = start.colorize(:red) + "The astronomy picture of the day on " + link_hash[:date].colorize(:green) + " was " + link_hash[:name].colorize(:green) + ".\n"
+    start.length.times do |n|
+      lines += " "
+    end
+    lines += "The link is " + link_hash[:link].colorize(:green) + "."
+    puts lines
   end
   def print_page(page_hash)
     words_arr = page_hash[:expl].split(" ")
@@ -16,7 +21,7 @@ class Printer
     max_line_length = 0
     words_arr.each_with_index do |word, idx|
       line += word + " "
-      if line.length >= 120 || idx == words_arr.length - 1
+      if line.length >= 100 || idx == words_arr.length - 1
         lines_arr << line.strip
         if line.strip.length > max_line_length then max_line_length = line.strip.length end
         line = ""
