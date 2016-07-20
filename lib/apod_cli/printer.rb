@@ -1,4 +1,9 @@
+require "open-uri"
+require "nokogiri"
 require "colorize"
+
+require_relative "cli"
+require_relative "scraper"
 
 class Printer
   def print_link(link_hash, start="")

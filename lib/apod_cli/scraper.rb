@@ -1,5 +1,9 @@
-require "nokogiri"
 require "open-uri"
+require "nokogiri"
+require "colorize"
+
+require_relative "cli"
+require_relative "printer"
 
 class Scraper
   def initialize

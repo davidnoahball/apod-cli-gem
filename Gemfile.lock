@@ -1,0 +1,26 @@
+PATH
+  remote: .
+  specs:
+    apod-cli (0.0.0)
+
+GEM
+  remote: https://rubygems.org/
+  specs:
+    colorize (0.7.7)
+    mini_portile2 (2.1.0)
+    nokogiri (1.6.8)
+      mini_portile2 (~> 2.1.0)
+      pkg-config (~> 1.1.7)
+    pkg-config (1.1.7)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  apod-cli!
+  bundler (~> 1.10)
+  colorize (~> 0.7)
+  nokogiri (~> 1.6)
+
+BUNDLED WITH
+   1.11.2
