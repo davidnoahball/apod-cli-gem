@@ -6,7 +6,7 @@ class Scraper
     @@data = self.class.index_data
   end
 
-  def self.data
+  def data
     @@data
   end
 
@@ -16,7 +16,13 @@ class Scraper
 
   def pic_data(url)
     explanation = Nokogiri::HTML(open(url)).css("body").text.match(/Explanation:[\s\S]+?(\n(\s*)){3}/).to_s.gsub(/\n/, " ").gsub(/\s{2,}/, " ").strip
-    name = self.class.data.select{|hash| url.include?(hash[:link])}[0][:name]
+    name = self.data.select{|hash| url.include?(hash[:link])}[0][:name]
+    if Nokogiri::HTML(open(url)).css("p a img").to_a != []
+      link = "http://apod.nasa.gov/apod/#{Nokogiri::HTML(open(url)).css("p a img").attribute("src").to_s}"
+    else
+      link = self.data.select{|hash| url.include?(hash[:link])}[0][:link]
+    end
+    hash = {name: name, expl: explanation, link:link}
   end
 
   def self.index_data
@@ -64,7 +70,7 @@ class Scraper
       array << hash
     end
 
-    array << {date: "2007-07-16", name: "The Lagoon Nebula in Gas, Dust, and Stars", link: "ap070716.html"} #This is the dumb typo'd link that I decided to hardcode.
+    array.insert(-4411, {date: "2007-07-16", name: "The Lagoon Nebula in Gas, Dust, and Stars", link: "http://apod.nasa.gov/apod/ap070716.html"}) #This is the dumb typo'd link that I decided to hardcode.
     array
   end
 end
