@@ -42,7 +42,9 @@ class CLI
   end
 
   def sample
-
+    puts "Please enter the number (" + "[1] - [#{@data.length}]".colorize(:red) + ") of links you would\nlike to sample. Or, type " + "'all'".colorize(:red) + " for information on all results."
+    wanted = [(1..@data.length).to_a.map{|e| e.to_s}, "all"].flatten
+    num = valid_input(wanted)
   end
 
   def date_search(multisearch=false)
@@ -72,8 +74,21 @@ class CLI
     if valid_input(["y", "n"]) == "y"
       puts "Please enter the " + "results number".colorize(:red) + " of any link(s) you would like more\ninformation on, comma separated. Or, type " + "'all'".colorize(:red) + " for more information on all results."
       wanted = [(1..arr.length).to_a.map{|e| e.to_s}, "all"].flatten
-      searchterms = valid_input(wanted).split(",")
-      if searchterms == ["all"]
+      validated = false #Should maybe turn this into a valid_split method or something, but it's not necessary right now.
+      while !validated
+        searchterms = gets.chomp.strip.downcase.split(",")
+        failed = false
+        searchterms.each do |searchterm|
+          searchterm.strip!
+          if !wanted.include?(searchterm)
+            puts "That's not a valid input! Please try again."
+            failed = true
+            break
+          end
+        end
+        if !failed then validated = true end
+      end
+      if searchterms.include?("all")
         print_pages(arr)
       else
         selected = []
