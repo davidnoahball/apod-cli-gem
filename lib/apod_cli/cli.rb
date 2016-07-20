@@ -20,7 +20,7 @@ class CLI
     puts "[2]".colorize(:red) + " Search by name"
     puts "[3]".colorize(:red) + " Search by date and name"
     puts "[4]".colorize(:red) + " Sample data"
-    search_type = valid_input(["1", "2", "3"]).to_i
+    search_type = valid_input(["1", "2", "3", "4"]).to_i
     case search_type
     when 1
       date_search
@@ -42,9 +42,12 @@ class CLI
   end
 
   def sample
-    puts "Please enter the number (" + "[1] - [#{@data.length}]".colorize(:red) + ") of links you would\nlike to sample. Or, type " + "'all'".colorize(:red) + " for information on all results."
+    puts "Please enter the number (" + "[1]".colorize(:red) + " - " + "[#{@data.length}]".colorize(:red) + ") of links you would\nlike to sample. Or, type " + "'all'".colorize(:red) + " for information on all results."
     wanted = [(1..@data.length).to_a.map{|e| e.to_s}, "all"].flatten
     num = valid_input(wanted)
+    sample = @data.sample(num.to_i)
+    print_links(sample)
+    more_info(sample)
   end
 
   def date_search(multisearch=false)
