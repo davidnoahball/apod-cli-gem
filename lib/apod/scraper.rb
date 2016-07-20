@@ -6,7 +6,7 @@ class Scraper
     @@data = self.class.index_data
   end
 
-  def data
+  def self.data
     @@data
   end
 
@@ -15,7 +15,8 @@ class Scraper
   end
 
   def pic_data(url)
-    content = Nokogiri::HTML(open(url)).css("body").text.match(/Explanation:[\s\S]+?(\n(\s*)){3}/).to_s.gsub(/\n/, " ").gsub(/\s{2,}/, " ").strip
+    explanation = Nokogiri::HTML(open(url)).css("body").text.match(/Explanation:[\s\S]+?(\n(\s*)){3}/).to_s.gsub(/\n/, " ").gsub(/\s{2,}/, " ").strip
+    name = self.class.data.select{|hash| url.include?(hash[:link])}[0][:name]
   end
 
   def self.index_data
