@@ -42,7 +42,7 @@ class CLI
   end
 
   def sample
-    puts "Please enter the number (" + "[1]".colorize(:red) + " - " + "[#{@data.length}]".colorize(:red) + ") of links you would\nlike to sample. Or, type " + "'all'".colorize(:red) + " for information on all results."
+    puts "\nPlease enter the number (" + "[1]".colorize(:red) + " - " + "[#{@data.length}]".colorize(:red) + ") of links you would\nlike to sample. Or, type " + "'all'".colorize(:red) + " for information on all results."
     wanted = [(1..@data.length).to_a.map{|e| e.to_s}, "all"].flatten
     num = valid_input(wanted)
     sample = @data.sample(num.to_i)
@@ -52,13 +52,41 @@ class CLI
 
   def date_search(multisearch=false)
     results = []
+    puts "\nWhich type of date search would you like to perform?"
+    puts "[1]".colorize(:red) + " exact date"
+    puts "[2]".colorize(:red) + " date in each year"
+    puts "[3]".colorize(:red) + " date range"
+    date_search_type = valid_input(["1", "2", "3"]).to_i
+    case date_search_type
+    when 1
+      puts "\nPlease enter a date in the format yyyy-mm-dd. The oldest is 1995-06-16."
+      input = gets.chomp.strip
+      @data.each do |hash|
+        if hash[:date] == input
+          results << hash
+          break
+        end
+      end
+      if results == []
+        puts "Date not found!"
+        return
+      end
+      puts ""
+      print_links(results)
+      print_pages(results)
+      return
+    when 2
+
+    when 3
+
+    end
     if multisearch then results = name_search(results) end
     print_links(results)
     more_info(results)
   end
 
   def name_search(searchspace=@data)
-    puts "Please enter one or multiple " + "search terms".colorize(:red) + ", with each query comma separated."
+    puts "\nPlease enter one or multiple " + "search terms".colorize(:red) + ", with each query comma separated."
     searchterms = gets.chomp.strip.downcase.split(",")
     results = []
     searchterms.each do |searchterm|
@@ -67,6 +95,10 @@ class CLI
     end
     unique = results.flatten.uniq.sort{|h1, h2| h1[:date] > h2[:date] ? 1 : -1}
     if searchspace != @data then return unique end
+    if unique == []
+      puts "\nNo results found!"
+      return
+    end
     print_links(unique)
     more_info(unique)
   end
