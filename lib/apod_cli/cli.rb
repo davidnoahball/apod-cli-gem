@@ -123,6 +123,10 @@ class CLI
       end
     end
     if multisearch then results = name_search(results) end
+    if results == []
+      puts "\nNo results found!\n"
+      return
+    end
     puts ""
     print_links(results)
     puts ""
@@ -157,7 +161,9 @@ class CLI
     end
     puts "[y/n]".colorize(:red)
     if valid_input(["y", "n"]) == "y"
+      puts ""
       if arr.length > 1
+        puts ""
         puts "Please enter the " + "results number".colorize(:red) + " of any link(s) you would like more\ninformation on, comma separated. Or, type " + "'all'".colorize(:red) + " for more information on all results."
         wanted = [(1..arr.length).to_a.map{|e| e.to_s}, "all"].flatten
         validated = false #Should maybe turn this into a valid_split method or something, but it's not necessary right now.

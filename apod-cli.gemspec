@@ -9,11 +9,11 @@ Gem::Specification.new do |spec|
   spec.description   = "Uses web scraping to pull Astronomy Picture of the Day information from http://apod.nasa.gov and provides a basic CLI interface for that data"
   spec.homepage      = "http://davidnoahball.com"
 
-  spec.files         = ["apod-cli.gemspec", "lib/apod_cli/cli.rb", "lib/apod_cli/printer.rb", "lib/apod_cli/scraper.rb"]
+  spec.files         = ["apod-cli.gemspec", "lib/apod_cli/cli.rb", "lib/apod_cli/printer.rb", "lib/apod_cli/scraper.rb", "lib/apod_cli.rb"]
   spec.executables   = ["apod-cli"]
   spec.name          = "apod-cli"
   spec.require_paths = ["lib", "lib/apod_cli"]
-  spec.version       = "0.0.0"
+  spec.version       = "0.0.2"
   spec.license       = "MIT"
 
   spec.add_development_dependency "bundler", "~> 1.10"
