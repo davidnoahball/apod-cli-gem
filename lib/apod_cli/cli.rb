@@ -76,7 +76,17 @@ class CLI
       print_pages(results)
       return
     when 2
-
+      puts "\nPlease enter a day of the year in the format mm-dd."
+      input = gets.chomp.strip
+      @data.each do |hash|
+        if hash[:date].slice(5..-1) == input
+          results << hash
+        end
+      end
+      if results == []
+        puts "Day not found! Did you use the correct format?"
+        return
+      end
     when 3
 
     end
@@ -86,7 +96,8 @@ class CLI
   end
 
   def name_search(searchspace=@data)
-    puts "\nPlease enter one or multiple " + "search terms".colorize(:red) + ", with each query comma separated."
+    puts "\nPlease enter one or multiple " + "search terms".colorize(:red) + ", with each query comma\nseparated. Ex: 'lunar eclipse, blood moon'"
+    puts ""
     searchterms = gets.chomp.strip.downcase.split(",")
     results = []
     searchterms.each do |searchterm|
@@ -100,6 +111,7 @@ class CLI
       return
     end
     print_links(unique)
+    puts ""
     more_info(unique)
   end
 
@@ -137,7 +149,11 @@ class CLI
 
   def print_links(arr)
     arr.each_with_index do |hash, idx|
-      @printer.print_link(hash, "[#{idx + 1}] ")
+      starter = "[#{idx + 1}]"
+      ((arr.length.to_s.length + 3) - starter.length).times do |n|
+        starter += " "
+      end
+      @printer.print_link(hash, starter)
     end
   end
 
