@@ -53,15 +53,15 @@ class CLI
   end
 
   def date_search(multisearch=false)
-    results = []
     puts "\nWhich type of date search would you like to perform?"
     puts "[1]".colorize(:red) + " exact date"
     puts "[2]".colorize(:red) + " date in each year"
     puts "[3]".colorize(:red) + " date range"
     date_search_type = valid_input(["1", "2", "3"]).to_i
+    results = []
     case date_search_type
     when 1
-      puts "\nPlease enter a date in the format yyyy-mm-dd. The oldest is 1995-06-16."
+      puts "\nPlease enter a " + "date".colorize(:red) + " in the format " + "yyyy-mm-dd".colorize(:red) + ". The oldest is 1995-06-16."
       input = gets.chomp.strip
       @data.each do |hash|
         if hash[:date] == input
@@ -70,7 +70,7 @@ class CLI
         end
       end
       if results == []
-        puts "Date not found!"
+        puts "\nDate not found! Did you use the correct format?\n\n"
         return
       end
       puts ""
@@ -78,7 +78,7 @@ class CLI
       print_pages(results)
       return
     when 2
-      puts "\nPlease enter a day of the year in the format mm-dd."
+      puts "\nPlease enter a " + "day of the year".colorize(:red) + " in the format " + "mm-dd".colorize(:red) + "."
       input = gets.chomp.strip
       @data.each do |hash|
         if hash[:date].slice(5..-1) == input
@@ -86,11 +86,41 @@ class CLI
         end
       end
       if results == []
-        puts "Day not found! Did you use the correct format?"
+        puts "\nDay not found! Did you use the correct format?\n\n"
         return
       end
     when 3
-
+      inputs = []
+      puts "\nPlease enter a " + "start date".colorize(:red) + " in the format " + "yyyy-mm-dd".colorize(:red) + ". The oldest is 1995-06-16."
+      start = gets.chomp.strip #This part of the code could be much less verbose and more compact/concise but it works and was already written and I want to try to finish today.
+      @data.each do |hash|
+        if hash[:date] == start
+          inputs << start
+          break
+        end
+      end
+      if inputs.length != 1
+        puts "\nDate not found! Did you use the correct format?\n\n"
+        return
+      end
+      puts "\nPlease enter an " + "end date".colorize(:red) + ". The most recent in the database is #{@data[0][:date]}."
+      finish = gets.chomp.strip
+      @data.each do |hash|
+        if hash[:date] == finish
+          inputs << finish
+          break
+        end
+      end
+      if inputs.length != 2
+        puts "\nDate not found! Did you use the correct format?\n\n"
+        return
+      end
+      inputs.sort!
+      @data.each do |hash|
+        if hash[:date] >= inputs[0] && hash[:date] <= inputs[1]
+          results << hash
+        end
+      end
     end
     if multisearch then results = name_search(results) end
     puts ""
@@ -110,7 +140,7 @@ class CLI
     unique = results.flatten.uniq.sort{|h1, h2| h1[:date] > h2[:date] ? 1 : -1}
     if searchspace != @data then return unique end
     if unique == []
-      puts "\nNo results found!"
+      puts "\nNo results found!\n"
       return
     end
     puts ""
@@ -156,6 +186,8 @@ class CLI
         end
         print_pages(selected)
       end
+    else
+      puts ""
     end
   end
 
