@@ -45,7 +45,11 @@ class CLI
     puts "\nPlease enter the number (" + "[1]".colorize(:red) + " - " + "[#{@data.length}]".colorize(:red) + ") of links you would\nlike to sample. Or, type " + "'all'".colorize(:red) + " for information on all results."
     wanted = [(1..@data.length).to_a.map{|e| e.to_s}, "all"].flatten
     num = valid_input(wanted)
-    sample = @data.sample(num.to_i)
+    if num == "all"
+      sample = @data
+    else
+      sample = @data.sample(num.to_i)
+    end
     puts ""
     print_links(sample)
     puts ""
