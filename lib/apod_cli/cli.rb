@@ -46,7 +46,9 @@ class CLI
     wanted = [(1..@data.length).to_a.map{|e| e.to_s}, "all"].flatten
     num = valid_input(wanted)
     sample = @data.sample(num.to_i)
+    puts ""
     print_links(sample)
+    puts ""
     more_info(sample)
   end
 
@@ -91,13 +93,14 @@ class CLI
 
     end
     if multisearch then results = name_search(results) end
+    puts ""
     print_links(results)
+    puts ""
     more_info(results)
   end
 
   def name_search(searchspace=@data)
     puts "\nPlease enter one or multiple " + "search terms".colorize(:red) + ", with each query comma\nseparated. Ex: 'lunar eclipse, blood moon'"
-    puts ""
     searchterms = gets.chomp.strip.downcase.split(",")
     results = []
     searchterms.each do |searchterm|
@@ -110,30 +113,39 @@ class CLI
       puts "\nNo results found!"
       return
     end
+    puts ""
     print_links(unique)
     puts ""
     more_info(unique)
   end
 
   def more_info(arr)
-    puts "Would you like more information on one or more of these matches?"
+    if arr.length > 1
+      puts "Would you like more information on one or more of these matches?"
+    else
+      puts "Would you like more information on this match?"
+    end
     puts "[y/n]".colorize(:red)
     if valid_input(["y", "n"]) == "y"
-      puts "Please enter the " + "results number".colorize(:red) + " of any link(s) you would like more\ninformation on, comma separated. Or, type " + "'all'".colorize(:red) + " for more information on all results."
-      wanted = [(1..arr.length).to_a.map{|e| e.to_s}, "all"].flatten
-      validated = false #Should maybe turn this into a valid_split method or something, but it's not necessary right now.
-      while !validated
-        searchterms = gets.chomp.strip.downcase.split(",")
-        failed = false
-        searchterms.each do |searchterm|
-          searchterm.strip!
-          if !wanted.include?(searchterm)
-            puts "That's not a valid input! Please try again."
-            failed = true
-            break
+      if arr.length > 1
+        puts "Please enter the " + "results number".colorize(:red) + " of any link(s) you would like more\ninformation on, comma separated. Or, type " + "'all'".colorize(:red) + " for more information on all results."
+        wanted = [(1..arr.length).to_a.map{|e| e.to_s}, "all"].flatten
+        validated = false #Should maybe turn this into a valid_split method or something, but it's not necessary right now.
+        while !validated
+          searchterms = gets.chomp.strip.downcase.split(",")
+          failed = false
+          searchterms.each do |searchterm|
+            searchterm.strip!
+            if !wanted.include?(searchterm)
+              puts "That's not a valid input! Please try again."
+              failed = true
+              break
+            end
           end
+          if !failed then validated = true end
         end
-        if !failed then validated = true end
+      else
+        searchterms = ["all"]
       end
       if searchterms.include?("all")
         print_pages(arr)
