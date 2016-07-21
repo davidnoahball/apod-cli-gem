@@ -13,7 +13,7 @@ Gem::Specification.new do |spec|
   spec.executables   = ["apod-cli"]
   spec.name          = "apod-cli"
   spec.require_paths = ["lib", "lib/apod_cli"]
-  spec.version       = "0.0.2"
+  spec.version       = "0.0.3"
   spec.license       = "MIT"
 
   spec.add_development_dependency "bundler", "~> 1.10"
